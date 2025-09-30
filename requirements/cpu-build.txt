@@ -6,7 +6,8 @@ packaging>=24.2
 setuptools>=77.0.3,<80.0.0
 setuptools-scm>=8
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.6.0+cpu
+torch==2.8.0+cpu; platform_machine == "x86_64"
+torch==2.8.0a0+34c6371d24.nv25.8; platform_machine == "ppc64le" or platform_machine == "aarch64" or platform_system == "Darwin"
 wheel
 jinja2>=3.1.6
 regex
