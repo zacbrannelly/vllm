@@ -175,6 +175,25 @@ if(NVCC_THREADS AND VLLM_GPU_LANG STREQUAL "CUDA")
 endif()
 
 #
+# Set compression mode for CUDA >=13.x.
+#
+if(VLLM_GPU_LANG STREQUAL "CUDA" AND
+   DEFINED CMAKE_CUDA_COMPILER_VERSION AND
+   CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
+  list(APPEND VLLM_GPU_FLAGS "--compress-mode=size")
+endif()
+
+#
+# Set CUDA include flags for CXX compiler.
+#
+if(VLLM_GPU_LANG STREQUAL "CUDA")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${CUDA_TOOLKIT_ROOT_DIR}/include")
+  if(CUDA_VERSION VERSION_GREATER_EQUAL 13.0)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${CUDA_TOOLKIT_ROOT_DIR}/include/cccl")
+  endif()
+endif()
+
+#
 # Use FetchContent for C++ dependencies that are compiled as part of vLLM's build process.
 # setup.py will override FETCHCONTENT_BASE_DIR to play nicely with sccache.
 # Each dependency that produces build artifacts should override its BINARY_DIR to avoid
